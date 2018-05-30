@@ -1,3 +1,21 @@
+# pycharm project file
+*.temp
+.idea/
+.pytest_cache/
+
+# logs/temp
+logs/
+saved_model/
+
+## data
+# raw data
+/data/seq/stocks/raw/
+
+# too large data
+/data/seq/house_consumption/
+
+
+## python template
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -102,3 +120,33 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+
+## ---> Windows
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+## ---> Linux
+*~
+
+# KDE directory preferences
+.directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
