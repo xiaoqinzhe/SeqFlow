@@ -1,6 +1,7 @@
 from dataproc.seqdb import *
 import matplotlib.pyplot as plt
 from dataproc.seqfactory import *
+from dataproc.seqproc import SeqDP
 from sklearn.preprocessing import MinMaxScaler
 
 # def test_seqdb():
@@ -17,8 +18,13 @@ from sklearn.preprocessing import MinMaxScaler
 #     plt.show()
 
 def test_multifactory():
-    seqf = MultstepPredDataFactory(seq_normalizer=MinMaxScaler())
-    x, y = seqf.get_data("stock", 10, 2, n_yseq=3, filename="000001.csv", column_indexes=["closing", "opening"], y_column = [0, 1])
+    norms = [SeqDP.get_minmax_normalizer()]
+    seqf = MultstepPredDataFactory(seq_normalizers=norms, if_win_normalized=True)
+    x, y = seqf.get_data("stock", n_xseq=10, n_yseq=3, dis=7, filename="000001.csv", column_indexes=["closing","opening"], y_column=[0, 1])
     print(x.shape, y.shape)
-
-
+    i = 666
+    print(x[i])
+    print(y[i])
+    print(seqf.rawy.shape)
+    print(seqf.rawy[i])
+    print(seqf.inverse_y([y[i]], start=i, end=i+1))
