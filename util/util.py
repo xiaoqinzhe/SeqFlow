@@ -1,9 +1,14 @@
 import calendar, math
 import os
 
-def checkDir(dir, isCreate = False):
+def check_path(path, is_create=True):
+	dir, file = os.path.split(path)
+	check_dir(dir, is_create)
+
+def check_dir(dir, is_create = False):
+	if dir==".": return True
 	fe = os.path.exists(dir)
-	if isCreate and not fe:
+	if is_create and not fe:
 		os.makedirs(dir)
 	return fe
 
@@ -39,4 +44,5 @@ def scaleAvgN(seq):
 	return res
 
 if __name__ == "__main__":
-	checkDir("./a/a/a", True)
+	# check_dir("./a/a/a", True)
+	extract_path("afds/asdf/fa.h5")

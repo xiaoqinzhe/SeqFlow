@@ -2,10 +2,13 @@
 A factory set that produces data
 """
 
-from dataproc.seqproc import SeqDP
-from dataproc import seqdb
 import copy
+
 import numpy as np
+from dataproc.seq.seqproc import SeqDP
+
+from dataproc.seq import seqdb
+
 
 class SeqDataFactory:
     """Sequence
@@ -79,9 +82,9 @@ class SeqDataFactory:
         self._postproc_data()
         return self.x
 
-class MultstepPredDataFactory(SeqDataFactory):
+class MultistepPredDataFactory(SeqDataFactory):
     def __init__(self, seq_normalizers=None, if_win_normalized=False):
-        super(MultstepPredDataFactory, self).__init__(seq_normalizers, if_win_normalized)
+        super(MultistepPredDataFactory, self).__init__(seq_normalizers, if_win_normalized)
         self.dis = 1
         self.n_xseq = 1
         self.n_yseq = 1
@@ -119,11 +122,12 @@ class MultstepPredDataFactory(SeqDataFactory):
 
     def _postproc_data(self, **data_params):
         self.x, self.y = self.seqdp.windowing_xy(self.x, self.y, self.n_xseq, self.dis, n_yseq=self.n_yseq)
-        self.rawy = self.rawy[self.n_xseq+self.dis-1:]
+        self.rawy = self.rawy[self.n_xseq+self.dis-1]
         self.rawy = self.seqdp.windowing_x(self.rawy, self.n_yseq)
         if self.if_win_normalized:
             b = data_params.get("normalized_ybase", [i for i in range(len(self.x[0][0]))])
             self.x, self.y = self.win_normalizer.fit_transform(self.x, self.y, ybase=b)
+        # print(self.rawy[100:110], self.y[100:110])
 
     def inverse_y(self, y, start=0, end=None):
         if not isinstance(y, np.ndarray): y = np.array(y)
@@ -135,12 +139,20 @@ class MultstepPredDataFactory(SeqDataFactory):
                 else: y = self.seq_normalizers[-i-1].inverse_transform(y)
         return y
 
-    def get_rawy(self, start=0, end=None):
+    def get_raw_y(self, start=0, end=None):
         if end is None: end = len(self.y)
         return self.rawy[start:end]
 
-    def get_rawytest(self, split_rate=0.9):
-        return self.get_rawy(int(split_rate*len(self.y)))
+    def get_raw_ytest(self, test_size):
+        return self.rawy[int((1 - test_size) * len(self.y)):]
+
+    def get_raw_ypred(self, y_pred, test_size):
+        return self.inverse_y(y_pred, start=int((1 - test_size) * len(self.y)))
+
+    def get_raw_ytest_ypred(self, y_pred, test_size):
+        mid = int((1 - test_size) * len(self.y))
+        iy = self.inverse_y(y_pred, start=mid)
+        return self.rawy[mid:], iy
 
     def get_data(self, dataset_name, n_xseq=1, dis=1, n_yseq=1, **data_params):
         self.dis = dis

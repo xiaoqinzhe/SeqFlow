@@ -59,8 +59,8 @@ class WindowNormalizer(BaseNormalizer):
         return self.transform(x, y)
 
     def transform(self, x, y):
-        print(self.rx.shape, self.ry.shape)
-        print(x.shape, y.shape)
+        # print(self.rx.shape, self.ry.shape)
+        # print(x.shape, y.shape)
         for i in range(len(x)):
             for j in range(len(x[i][0])):
                 if self.rx[i][j]: x[i,:,j]= x[i,:,j]/self.rx[i][j] - 1
