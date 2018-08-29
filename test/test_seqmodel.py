@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+import _init_paths
 from model.seq.lstm import LSTMKModel
 from dataproc.seq.seqfactory import MultistepPredDataFactory
 from dataproc.seq.seqproc import SeqDP
@@ -19,7 +22,6 @@ def test_lstmkmodel():
     ry, py = seqf.get_raw_ytest_ypred(pred_y, 0.1)
     print(ry.shape, py.shape)
     SeqPredDataVisual.plot_series(ry, py)
-
 
 if __name__=="__main__":
     test_lstmkmodel()

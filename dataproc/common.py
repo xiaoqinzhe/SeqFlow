@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 """
 Common used functions or class in data precessing procedure
 """
@@ -31,6 +33,9 @@ def time_filter(x,  start_time, end_time = None, time_index = 0):
     if start_time > end_time: raise AttributeError("start_time must be smaller than end_time")
     start_index, end_index = -1, -1
     for i in range(len(x)):
+        # print(type(x[i][time_index]))
+        # print(start_time)
+        # exit()
         if x[i][time_index] == start_time:
             start_index = i
             break

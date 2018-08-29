@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 """"
 A naive lstm model implementation with Keras
 """
+
 from model.base.basemodel import KerasModel
 from model.base.component import getLstmLayer, getFcnLayer
 from keras.models import Model

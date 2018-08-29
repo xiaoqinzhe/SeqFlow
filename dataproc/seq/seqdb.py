@@ -1,11 +1,12 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 '''
 seqdb is used to get sequence dataset
 '''
 
 import numpy as np
 import pandas as pd
-import netCDF4 as cdf
-import copy
+import datetime
 import matplotlib.pyplot as plt
 from config.config import configs
 from dataproc.common import time_filter
@@ -14,7 +15,6 @@ import os
 seqpath = configs['data_path'] + "seq/"
 # stock data info
 stock_column_names = ["date", "opening", "high", "low", "closing", "volume", "turnover"]
-
 
 def get_seq(filename, column_indexes = None, start_time=None, end_time=None):
 	"""
@@ -27,23 +27,24 @@ def get_seq(filename, column_indexes = None, start_time=None, end_time=None):
 	"""
 	path = seqpath + filename
 	df = pd.read_csv(path)
+	# df["date"]=pd.to_datetime(df['date'])
+	df=df.values
 	if start_time: df = time_filter(df, start_time, end_time)
 	if column_indexes is None: column_indexes = [0]
-	df = df.iloc[:, column_indexes]
-	return df.values
-
+	df = df[:, column_indexes]
+	return df
 # get stock data
 # name : ["date", "opening", "high", "low", "closing", "volume", "turnover"]
-def get_stock(filename, column_names = ["closing"], start_time=None, end_time=None):
+def get_stock(filename, column_names=stock_column_names, start_time=None, end_time=None):
 	indexes = [stock_column_names.index(name) for name in column_names]
 	return get_seq("stocks/" + filename, indexes, start_time, end_time)
 
-def get_stock_names():
+def get_all_stock_codes():
 	files = []
 	path = seqpath+"stocks/"
 	for file in os.listdir(path):
-		if os.path.isfile(path + file):
-			files.append(file)
+		if os.path.isfile(path+file):
+			files.append(file.split('.')[0])
 	return files
 
 def get_sunspot(start_time=None, end_time=None):
@@ -51,12 +52,6 @@ def get_sunspot(start_time=None, end_time=None):
 
 def get_temperature():
 	return get_seq('temperature/daily-minimum-temperatures-in-me.csv', [0])
-
-def get_air(params=None):
-	path = '../data/air/air.mon.anom.nc'
-	df = cdf.Dataset(path, "a")
-	print(df.dimensions)
-	return df[:, np.newaxis], df[:, np.newaxis]
 
 def get_house_power_consumption(params=None):
 	path = '../data/house_consumption/household_power_consumption.txt'

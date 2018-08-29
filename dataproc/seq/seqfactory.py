@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 """
 A factory set that produces data
 """
@@ -122,7 +124,7 @@ class MultistepPredDataFactory(SeqDataFactory):
 
     def _postproc_data(self, **data_params):
         self.x, self.y = self.seqdp.windowing_xy(self.x, self.y, self.n_xseq, self.dis, n_yseq=self.n_yseq)
-        self.rawy = self.rawy[self.n_xseq+self.dis-1]
+        self.rawy = self.rawy[self.n_xseq+self.dis-1:]
         self.rawy = self.seqdp.windowing_x(self.rawy, self.n_yseq)
         if self.if_win_normalized:
             b = data_params.get("normalized_ybase", [i for i in range(len(self.x[0][0]))])
